@@ -12,7 +12,7 @@
 			<v-divider>{{ group.dateFormatted }}</v-divider>
 
 			<template v-for="item in group.activity" :key="item.id">
-				<comment-item :refresh="refresh" :activity="item" />
+				<comment-item :refresh="refresh" :activity="item" :user-ids="userIds" />
 			</template>
 		</template>
 	</sidebar-detail>
@@ -25,7 +25,7 @@ import { defineComponent, ref } from 'vue';
 import api from '@/api';
 import { Activity, ActivityByDate } from './types';
 import CommentInput from './comment-input.vue';
-import { groupBy, orderBy } from 'lodash';
+import { groupBy, orderBy, flatten } from 'lodash';
 import formatLocalized from '@/utils/localized-format';
 import { isToday, isYesterday, isThisYear } from 'date-fns';
 import CommentItem from './comment-item.vue';
@@ -45,19 +45,21 @@ export default defineComponent({
 	setup(props) {
 		const { t } = useI18n();
 
-		const { activity, loading, error, refresh, count } = useActivity(props.collection, props.primaryKey);
+		const { activity, loading, error, refresh, count, userIds } = useActivity(props.collection, props.primaryKey);
 
-		return { t, activity, loading, error, refresh, count };
+		return { t, activity, loading, error, refresh, count, userIds };
 
 		function useActivity(collection: string, primaryKey: string | number) {
+			const regex = /(@[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})/gm;
 			const activity = ref<ActivityByDate[] | null>(null);
 			const count = ref(0);
 			const error = ref(null);
 			const loading = ref(false);
+			const userIds = ref({});
 
 			getActivity();
 
-			return { activity, error, loading, refresh, count };
+			return { activity, error, loading, refresh, count, userIds };
 
 			async function getActivity() {
 				error.value = null;
@@ -86,15 +88,18 @@ export default defineComponent({
 					});
 
 					count.value = response.data.data.length;
-
 					const activityByDate = groupBy(response.data.data, (activity: Activity) => {
 						// activity's timestamp date is in iso-8601
 						const date = new Date(new Date(activity.timestamp).toDateString());
 						return date;
 					});
 
-					const activityGrouped: ActivityByDate[] = [];
+					userIds.value = await loadUserIds(response.data.data);
+					response.data.data.forEach((comment: Record<string, any>) => {
+						comment.comment = comment.comment.split(regex);
+					});
 
+					const activityGrouped: ActivityByDate[] = [];
 					for (const [key, value] of Object.entries(activityByDate)) {
 						const date = new Date(key);
 						const today = isToday(date);
@@ -102,12 +107,10 @@ export default defineComponent({
 						const thisYear = isThisYear(date);
 
 						let dateFormatted: string;
-
 						if (today) dateFormatted = t('today');
 						else if (yesterday) dateFormatted = t('yesterday');
 						else if (thisYear) dateFormatted = await formatLocalized(date, String(t('date-fns_date_short_no_year')));
 						else dateFormatted = await formatLocalized(date, String(t('date-fns_date_short')));
-
 						activityGrouped.push({
 							date: date,
 							dateFormatted: String(dateFormatted),
@@ -126,6 +129,34 @@ export default defineComponent({
 			async function refresh() {
 				await getActivity();
 			}
+		}
+
+		async function loadUserIds(comments: Record<string, any>) {
+			const regex = /(@[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})/gm;
+
+			let userIds: any[] = [];
+			comments.forEach((comment: Record<string, any>) => {
+				userIds.push(comment.comment.match(regex));
+			});
+
+			const uniqIds: string[] = [...new Set(flatten(userIds))].filter((id) => {
+				if (id) return id;
+			});
+			const idFilters = uniqIds.map((id) => {
+				return { id: { _eq: id.substr(1) } };
+			});
+			const response = await api.get('/users', {
+				params: {
+					filter: { _or: idFilters },
+					fields: ['first_name', 'last_name', 'email', 'id'],
+				},
+			});
+			const userObjects: Record<string, any> = {};
+
+			response.data.data.map((user: Record<string, any>) => {
+				userObjects[user.id] = user;
+			});
+			return userObjects;
 		}
 	},
 });
