@@ -2,7 +2,6 @@ import { AbstractServiceOptions, PrimaryKey, Item, Action } from '../types';
 import { ItemsService, MutationOptions } from './index';
 import { NotificationsService } from './notifications';
 import { Notification } from '@directus/shared/types';
-import { UsersService } from '..';
 
 export class ActivityService extends ItemsService {
 	notificationsService: NotificationsService;
