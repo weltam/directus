@@ -1,0 +1,9 @@
+table: directus_notifications
+
+fields:
+  - field: id
+  - field: timestamp
+  - field: user
+  - field: message
+  - field: collection
+  - field: item
