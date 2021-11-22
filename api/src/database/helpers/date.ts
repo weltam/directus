@@ -14,7 +14,6 @@ export function getDateHelper(): KnexDate {
 			pg: KnexDate,
 			postgres: KnexDate,
 			cockroachdb: KnexDate,
-			cockroacdb: KnexDate,
 			redshift: KnexDate,
 			mssql: KnexDate,
 			oracledb: KnexDate,

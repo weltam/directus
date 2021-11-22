@@ -9,3 +9,5 @@ npm install
 npm run build
 
 cp api/example.env api/.env
+
+npm run cli bootstrap

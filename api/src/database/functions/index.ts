@@ -13,7 +13,6 @@ export function FunctionsHelper(knex: Knex): HelperFn {
 		case 'Client_MySQL':
 			return new HelperMySQL(knex);
 		case 'Client_PG':
-			return new HelperPostgres(knex);
 		case 'Client_CockroachDB':
 			return new HelperPostgres(knex);
 		case 'Client_SQLite3':
