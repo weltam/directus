@@ -12,7 +12,7 @@ export type Credentials = {
 	options__encrypt?: boolean;
 };
 export default function createDBConnection(
-	client: 'sqlite3' | 'mysql' | 'pg' | 'crdb' | 'oracledb' | 'mssql',
+	client: 'sqlite3' | 'mysql' | 'pg' | 'cockroachdb' | 'oracledb' | 'mssql',
 	credentials: Credentials
 ): Knex<any, unknown[]> {
 	let connection: Knex.Config['connection'] = {};
@@ -34,7 +34,7 @@ export default function createDBConnection(
 			password: password,
 		};
 
-		if (client === 'pg' || client === 'crdb') {
+		if (client === 'pg' || client === 'cockroachdb') {
 			const { ssl } = credentials as Credentials;
 			connection['ssl'] = ssl;
 		}

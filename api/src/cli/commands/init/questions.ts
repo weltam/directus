@@ -68,7 +68,7 @@ export const databaseQuestions = {
 	sqlite3: [filename],
 	mysql: [host, port, database, user, password],
 	pg: [host, port, database, user, password, ssl],
-	crdb: [host, port, database, user, password, ssl],
+	cockroachdb: [host, port, database, user, password, ssl],
 	oracledb: [host, port, database, user, password],
 	mssql: [host, port, database, user, password, encrypt],
 };

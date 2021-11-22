@@ -40,7 +40,7 @@ export default function getDatabase(): Knex {
 			requiredEnvVars.push('DB_USER', 'DB_PASSWORD', 'DB_CONNECT_STRING');
 		}
 	} else {
-		if (env.DB_CLIENT === 'pg' || env.DB_CLIENT === 'crdb') {
+		if (env.DB_CLIENT === 'pg' || env.DB_CLIENT === 'cockroachdb') {
 			if (!env.DB_CONNECTION_STRING) {
 				requiredEnvVars.push('DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USER');
 			}
