@@ -14,6 +14,8 @@ export function FunctionsHelper(knex: Knex): HelperFn {
 			return new HelperMySQL(knex);
 		case 'Client_PG':
 			return new HelperPostgres(knex);
+		case 'Client_CockroachDB':
+			return new HelperPostgres(knex);
 		case 'Client_SQLite3':
 			return new HelperSQLite(knex);
 		case 'Client_Oracledb':

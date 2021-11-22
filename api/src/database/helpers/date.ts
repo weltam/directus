@@ -13,6 +13,8 @@ export function getDateHelper(): KnexDate {
 			sqlite3: KnexDate_SQLITE,
 			pg: KnexDate,
 			postgres: KnexDate,
+			crdb: KnexDate,
+			cockroacdb: KnexDate,
 			redshift: KnexDate,
 			mssql: KnexDate,
 			oracledb: KnexDate,

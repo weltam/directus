@@ -14,6 +14,7 @@ export function getGeometryHelper(database?: Knex): KnexSpatial {
 			mysql: KnexSpatial_MySQL,
 			sqlite: KnexSpatial_SQLite,
 			postgres: KnexSpatial_PG,
+			cockroachdb: KnexSpatial_PG,
 			redshift: KnexSpatial_Redshift,
 			mssql: KnexSpatial_MSSQL,
 			oracle: KnexSpatial_Oracle,
