@@ -9,9 +9,9 @@ export async function up(knex: Knex): Promise<void> {
 		return;
 	}
 
-	await knex.schema.alterTable('directus_webhooks', (table) => {
-		table.text('url').notNullable().alter();
-	});
+	// await knex.schema.alterTable('directus_webhooks', (table) => {
+	// 	table.text('url').notNullable().alter();
+	// });
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -21,7 +21,7 @@ export async function down(knex: Knex): Promise<void> {
 		return;
 	}
 
-	await knex.schema.alterTable('directus_webhooks', (table) => {
-		table.text('url').alter();
-	});
+	// await knex.schema.alterTable('directus_webhooks', (table) => {
+	// 	table.text('url').alter();
+	// });
 }
