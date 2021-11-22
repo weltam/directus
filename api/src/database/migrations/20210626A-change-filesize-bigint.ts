@@ -7,9 +7,9 @@ export async function up(knex: Knex): Promise<void> {
 		return;
 	}
 
-	await knex.schema.alterTable('directus_files', (table) => {
-		table.bigInteger('filesize').nullable().defaultTo(null).alter();
-	});
+	// await knex.schema.alterTable('directus_files', (table) => {
+	// 	table.bigInteger('filesize').nullable().defaultTo(null).alter();
+	// });
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -17,7 +17,7 @@ export async function down(knex: Knex): Promise<void> {
 		return;
 	}
 
-	await knex.schema.alterTable('directus_files', (table) => {
-		table.integer('filesize').nullable().defaultTo(null).alter();
-	});
+	// await knex.schema.alterTable('directus_files', (table) => {
+	// 	table.integer('filesize').nullable().defaultTo(null).alter();
+	// });
 }
